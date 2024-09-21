@@ -36,7 +36,7 @@ exports.login = asyncHandler( async (req,res,next) => {
 })
 
 
-// Get all users
+// fetch all users
 exports.getAllUsers = asyncHandler( async(req,res,next) => {
     try{
         const allUsers = await User.find();
@@ -44,5 +44,49 @@ exports.getAllUsers = asyncHandler( async(req,res,next) => {
     }
     catch(error){
         throw new Error(error);
+    }
+})
+
+
+// fetch a single user
+exports.getUser = asyncHandler( async(req,res,next) => {
+    const {id} = req.params;
+    try{
+        const user = await User.findById(id);
+        res.status(200).json(user);
+    }catch(err){
+        throw new Error(err);
+    }
+})
+
+
+// delete a user
+exports.deleteUser = asyncHandler( async(req,res,next) => {
+    const {id} = req.params;
+    try{
+        const user = await User.findByIdAndDelete(id);
+        res.status(200).json(user);
+    }catch(err){
+        throw new Error(err);
+    }
+})
+
+
+// update a user
+exports.updateUser = asyncHandler(async (req,res,next) => {
+    const {id} = req.params;
+    try{
+        const user = await User.findByIdAndUpdate(id, {
+            firstname: req?.body?.firstname,
+            lastname: req?.body?.lastname,
+            email: req?.body?.email,
+            mobile: req?.body?.mobile
+        },
+        {
+            new: true
+        });
+        res.status(200).json(user);
+    }catch(err){
+        throw new Error(err);
     }
 })
