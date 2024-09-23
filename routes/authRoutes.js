@@ -8,12 +8,16 @@ router.post("/register", userController.createUser);
 
 router.post("/login", userController.login);
 
-router.get("/all-users", userController.getAllUsers);
+router.get("/all-users",authMiddleware, isAdmin, userController.getAllUsers);
 
 router.get("/:id",authMiddleware, isAdmin, userController.getUser);
 
 router.delete("/:id", userController.deleteUser);
 
-router.put("/:id", userController.updateUser);
+router.put("/edit-user", authMiddleware, userController.updateUser);
+
+router.put("/block-user/:id", authMiddleware, isAdmin, userController.blockUser);
+
+router.put("/unblock-user/:id", authMiddleware, isAdmin, userController.unblockUser);
 
 module.exports = router;
