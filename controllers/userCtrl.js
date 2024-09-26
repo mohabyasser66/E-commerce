@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const validateMongoId = require("../utils/validateMongoId");
 const {generateRefreshToken} = require("../config/refreshtoken");
+const jwt = require("jsonwebtoken");
 
 // create a user function
 exports.createUser = asyncHandler( async (req,res,next) => {
@@ -29,7 +30,7 @@ exports.login = asyncHandler( async (req,res,next) => {
         {
             new: true
         })
-        res.cookie("refreshtoken", refreshtoken, {
+        res.cookie("refreshToken", refreshtoken, {
             httpOnly: true,
             maxAge: 72*60*60*1000
         })
@@ -46,7 +47,49 @@ exports.login = asyncHandler( async (req,res,next) => {
         throw new Error("Invalid Credentials.");
     }
     
-})
+});
+
+
+//handle refresh token
+exports.handleRefreshToken = asyncHandler(async (req,res,next) => {
+    const cookie = req.cookies;
+    if(!cookie.refreshToken) throw new Error("No refresh token in cookies");
+    const refreshToken = cookie.refreshToken;
+    const user = await User.findOne({refreshToken: refreshToken});
+    if(!user) throw new Error("No user has this refresh token");
+    jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
+        if(err || user._id.toString() !== decoded.id){
+            throw new Error("there is an error with refresh token");
+        }
+        const accessToken = generateToken(user?._id);
+        res.status(200).json({accessToken: accessToken});
+    })
+    
+});
+
+
+// logout function
+exports.logout = asyncHandler(async (req,res,next) => {
+    const cookie = req.cookies;
+    if(!cookie.refreshToken) throw new Error("No refresh token in cookies");
+    const refreshToken = cookie.refreshToken;
+    const user = await User.findOne({refreshToken: refreshToken});
+    if(!user){
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true
+        });
+        return res.sendStatus(204);
+    }
+    await User.findOneAndUpdate({refreshToken: refreshToken}, {
+        refreshToken: " ",
+    });
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true
+    });
+    res.sendStatus(204);
+});
 
 
 // fetch all users

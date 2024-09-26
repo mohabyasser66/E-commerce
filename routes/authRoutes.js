@@ -10,7 +10,7 @@ router.post("/login", userController.login);
 
 router.get("/all-users",authMiddleware, isAdmin, userController.getAllUsers);
 
-router.get("/:id",authMiddleware, isAdmin, userController.getUser);
+// router.get("/:id",authMiddleware, isAdmin, userController.getUser);
 
 router.delete("/:id", userController.deleteUser);
 
@@ -19,5 +19,10 @@ router.put("/edit-user", authMiddleware, userController.updateUser);
 router.put("/block-user/:id", authMiddleware, isAdmin, userController.blockUser);
 
 router.put("/unblock-user/:id", authMiddleware, isAdmin, userController.unblockUser);
+
+router.get("/refresh", userController.handleRefreshToken);
+
+router.get("/logout", userController.logout);
+
 
 module.exports = router;
