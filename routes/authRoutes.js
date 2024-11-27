@@ -24,5 +24,11 @@ router.get("/refresh", userController.handleRefreshToken);
 
 router.get("/logout", userController.logout);
 
+router.put("/password", authMiddleware, userController.updatePassword);
+
+router.post("/forgot-password-token", userController.forgotPasswordToken);
+
+router.post("/reset-password/:token", userController.resetPassword);
+
 
 module.exports = router;
