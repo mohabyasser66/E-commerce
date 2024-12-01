@@ -14,5 +14,4 @@ router.put("/:id", authMiddleware, isAdmin, ProductCtrl.updateProduct);
 
 router.delete("/:id", authMiddleware, isAdmin, ProductCtrl.deleteProduct);
 
-
 module.exports = router;

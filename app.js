@@ -10,6 +10,7 @@ const dbConnect = require("./config/dbConnect");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoute");
 const blogRoutes = require("./routes/blogRoutes");
+const categoryRoutes = require("./routes/prodCategoryRoute");
 const { notFound, errorHandler } = require('./middlewares/errorHandler');
 const test = require("./middlewares/test");
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use("/api/blog", blogRoutes);
 app.use("/api/user", authRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/category", categoryRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
