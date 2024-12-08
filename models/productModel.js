@@ -48,9 +48,13 @@ var productSchema = new mongoose.Schema({
     ratings:[
         {
             star: Number,
-            postedby: {type: mongoose.Schema.Types.ObjectId, ref: "User"}
+            postedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"}
         }
-    ]
+    ],
+    totalRating:{
+        type: String,
+        default: ""
+    }
 }, {timestamps: true});
 
 module.exports = mongoose.model('Product', productSchema);

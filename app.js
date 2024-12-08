@@ -11,6 +11,8 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoute");
 const blogRoutes = require("./routes/blogRoutes");
 const categoryRoutes = require("./routes/prodCategoryRoute");
+const blogCategoryRoutes = require("./routes/blogCatRoute");
+const brandRoutes = require("./routes/brandRoute");
 const { notFound, errorHandler } = require('./middlewares/errorHandler');
 const test = require("./middlewares/test");
 
@@ -19,10 +21,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use("/api/category", categoryRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/user", authRoutes);
 app.use("/api/product", productRoutes);
-app.use("/api/category", categoryRoutes);
+app.use("/api/blogCategory", blogCategoryRoutes);
+app.use("/api/brand", brandRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
